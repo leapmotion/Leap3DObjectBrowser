@@ -11,7 +11,7 @@ using Leap;
 // The model for our skeletal hand made out of various polyhedra.
 public class SkeletalHand : HandModel {
 
-  protected const float PALM_CENTER_OFFSET = 15.0f;
+  protected const float PALM_CENTER_OFFSET = 0.0150f;
 
   public GameObject palm;
 
@@ -28,16 +28,8 @@ public class SkeletalHand : HandModel {
   }
 
   protected Vector3 GetPalmCenter() {
-    Hand leap_hand = GetLeapHand();
-    Vector3 offset = leap_hand.Direction.ToUnityScaled() * PALM_CENTER_OFFSET;
-    Vector3 local_center = leap_hand.PalmPosition.ToUnityScaled() - offset;
-
-    return GetController().transform.TransformPoint(local_center);
-  }
-
-  protected Quaternion GetPalmRotation() {
-    return GetController().transform.rotation *
-           GetLeapHand().Basis.Rotation();
+    Vector3 offset = PALM_CENTER_OFFSET * Vector3.Scale(GetPalmDirection(), transform.localScale);
+    return GetPalmPosition() - offset;
   }
 
   private void SetPositions() {
@@ -52,3 +44,5 @@ public class SkeletalHand : HandModel {
     }
   }
 }
+
+
